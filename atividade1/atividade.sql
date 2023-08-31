@@ -85,18 +85,25 @@ INSERT INTO endereco (bairro, rua, numero, complemento, cep, leitor_id) VALUES
     ('Bairro A', 'Rua Principal', '123', 'Apto 101', '12345-678', 1),
     ('Bairro B', 'Rua Secundária', '456', NULL, '23456-789', 2),
     ('Bairro D', 'Rua Final', '101', 'Bloco A', '45678-901', 4),
-    ('Bairro E', 'Rua Inicial', '222', 'Casa 5', '56789-012', 5);
+    ('Bairro E', 'Rua Inicial', '222', 'Casa 5', '56789-012', 5),
+    ('Bairro B', 'Rua Secundária', '456', NULL, '23456-789', 5);
 
-SELECT 'Leitor' Categoria, nome, email, senha FROM leitor
+SELECT 'Leitor' Categoria, leitor.nome, leitor.email, leitor.senha, 
+    CASE 
+        WHEN endereco.leitor_id IS NULL THEN 'Sem endereço cadastrado'
+        ELSE STRING_AGG ( CONCAT(endereco.bairro, ', ', endereco.rua, ', ', endereco.numero), '; ')
+    END AS endereco_completo FROM leitor
+LEFT JOIN endereco ON (leitor.id = endereco.leitor_id)
+GROUP BY leitor.id, endereco.leitor_id
 UNION
-SELECT 'Autor' Categoria, nome, email, senha FROM autor;
+SELECT 'Autor' Categoria, nome, email, senha, '' "Endereço" FROM autor;
 
-SELECT post.id AS Post, count(post_autor.post_id) AS Qtnd FROM post 
+SELECT post.id AS Post, count(post_autor.post_id) AS "Qtnd de alterações" FROM post 
 INNER JOIN post_autor ON post.id = post_autor.post_id
-GROUP BY post.id, post_autor.post_id;
-O título de cada Post e o nome de cada autores envolvido na escrita de cada Post 
+GROUP BY post.id, post_autor.post_id
+ORDER BY post.id;
 
-SELECT post.titulo, count(*) FROM post 
+SELECT post.titulo AS "Título", STRING_AGG ( autor.nome, ', ' ORDER BY autor.nome) "Autores" FROM post 
 INNER JOIN post_autor ON post.id = post_autor.post_id 
 INNER JOIN autor ON post_autor.autor_id = autor.id
 GROUP BY post.titulo
@@ -105,7 +112,9 @@ ORDER BY post.titulo;
 SELECT leitor.id, leitor.nome, leitor.email,
     CASE 
         WHEN endereco.leitor_id IS NULL THEN 'Sem endereço cadastrado'
-        ELSE CONCAT(endereco.bairro, ', ', endereco.rua, ', ', endereco.numero)
-    END AS endereco_completo
+        ELSE STRING_AGG ( CONCAT(endereco.bairro, ', ', endereco.rua, ', ', endereco.numero), '; ')
+    END AS "Endereco completo"
 FROM leitor 
-LEFT JOIN endereco ON leitor.id = endereco.leitor_id;
+LEFT JOIN endereco ON leitor.id = endereco.leitor_id
+GROUP BY leitor.id, endereco.leitor_id
+ORDER BY leitor.id;
