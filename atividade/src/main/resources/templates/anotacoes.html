@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Anotações</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        padding: 5vh 5vw;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      a,
+      button {
+        text-decoration: none;
+        padding: 5px 10px;
+        color: #000;
+        cursor: pointer;
+      }
+
+      a:hover,
+      button:hover {
+        background-color: #ddd;
+      }
+
+      div.navbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+      }
+
+      div.navbar a:hover {
+        text-decoration: underline;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+      }
+
+      ul {
+        list-style-type: none;
+        width: 100%;
+        max-width: 500px;
+        padding: 0;
+      }
+
+      ul li {
+        padding: 10px;
+        border: 1px solid #ddd;
+        position: relative;
+      }
+
+      ul li:hover {
+        background-color: #f0f0f0;
+      }
+
+      p.timestamp {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+        color: #555;
+      }
+
+      div.options {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        margin-top: 10px;
+        height: 30px;
+      }
+
+      div.options a,
+      div.options button {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        height: 100%;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        color: #000;
+        cursor: pointer;
+      }
+
+      div.options a:hover,
+      div.options button:hover {
+        background-color: #ddd;
+      }
+
+      div.options a {
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>{{usuario.nome}}</h1>
+      <a href="/novaAnotacoes/{{usuario.id}}">Nova anotação</a>
+      <a href="/">Sair</a>
+    </div>
+    <h2>Anotações</h2>
+    <ul>
+      {{#anotacoes}}
+      <li style="background-color: {{cor}}99;">
+        <h2>{{titulo}}</h2>
+        <p>{{texto}}</p>
+        <p class="timestamp">{{criado_em}}</p>
+        <div class="options">
+          <a href="/editarAnotacoes/{{usuario.id}}/{{id}}">Editar</a>
+          <form action="/deletarAnotacoes/{{usuario.id}}/{{id}}" method="post">
+            <button type="submit">Deletar</button>
+          </form>
+        </div>
+      </li>
+      {{/anotacoes}}
+    </ul>
+  </body>
+</html>
