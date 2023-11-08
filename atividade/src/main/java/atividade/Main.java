@@ -23,11 +23,12 @@ public class Main {
       Map map = new HashMap();
       int id = Integer.parseInt(req.params(":id"));
       map.put("usuario", new UsuarioDAO().obter(id));
-      map.put("anotacoes", new AnotacoesDAO().obterlista(id));
+      map.put("anotacoes", new AnotacoesDAO().obterlista(id, false));
+      map.put("lixeira", new AnotacoesDAO().obterlista(id, true));
       return new ModelAndView(map, "anotacoes.html");
     }, new MustacheTemplateEngine());
 
-    get("/novaAnotacoes/:id", (req, res) -> {
+    get("/adicionar/:id", (req, res) -> {
       Map map = new HashMap();
       int id = Integer.parseInt(req.params(":id"));
       map.put("usuario", id);
@@ -49,14 +50,14 @@ public class Main {
       return null;
     });
 
-    get("/editarAnotacoes/:user/:id", (req, res) -> {
+    get("/editar/:user/:id", (req, res) -> {
       Map map = new HashMap();
       map.put("usuario", Integer.parseInt(req.params(":user")));
       map.put("anotacao", new AnotacoesDAO().obter(Integer.parseInt(req.params(":id"))));
       return new ModelAndView(map, "editar_anotacao.html");
     }, new MustacheTemplateEngine());
 
-    post("/editarAnotacoes", (req, res) -> {
+    post("/editar", (req, res) -> {
       int user_id = Integer.parseInt(req.queryParams("usuario_id"));
       int id = Integer.parseInt(req.queryParams("id"));
 
@@ -70,9 +71,23 @@ public class Main {
       return null;
     });
 
-    post("/deletarAnotacoes/:user/:id", (req, res) -> {
+    post("/lixeira/:user/:id", (req, res) -> {
       int user_id = Integer.parseInt(req.params(":user"));
       int id = Integer.parseInt(req.params(":id"));
+      boolean isLixo = Boolean.parseBoolean(req.queryParams("lixeira"));
+
+      Anotacoes anotacao = new AnotacoesDAO().obter(id);
+      anotacao.setLixeira(isLixo);
+      new AnotacoesDAO().editar(anotacao);
+
+      res.redirect("/user/" + user_id);
+      return null;
+    });
+
+    post("/deletar/:user/:id", (req, res) -> {
+      int user_id = Integer.parseInt(req.params(":user"));
+      int id = Integer.parseInt(req.params(":id"));
+      System.out.println("aq - " + id);
 
       new AnotacoesDAO().deletar(id);
       res.redirect("/user/" + user_id);

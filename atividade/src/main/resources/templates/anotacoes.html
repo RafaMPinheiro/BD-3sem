@@ -45,10 +45,21 @@
         margin-bottom: 10px;
       }
 
+      section {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      section div {
+        width: 50%;
+        max-width: 600px;
+      }
+
       ul {
         list-style-type: none;
         width: 100%;
-        max-width: 500px;
         padding: 0;
       }
 
@@ -73,9 +84,11 @@
       div.options {
         display: flex;
         flex-direction: row;
+        justify-content: flex-end;
         gap: 10px;
         margin-top: 10px;
         height: 30px;
+        width: 100%;
       }
 
       div.options a,
@@ -94,33 +107,55 @@
       div.options button:hover {
         background-color: #ddd;
       }
-
-      div.options a {
-        margin-left: auto;
-      }
     </style>
   </head>
   <body>
     <div class="navbar">
       <h1>{{usuario.nome}}</h1>
-      <a href="/novaAnotacoes/{{usuario.id}}">Nova anotação</a>
+      <a href="/adicionar/{{usuario.id}}">Nova anotação</a>
       <a href="/">Sair</a>
     </div>
-    <h2>Anotações</h2>
-    <ul>
-      {{#anotacoes}}
-      <li style="background-color: {{cor}}99;">
-        <h2>{{titulo}}</h2>
-        <p>{{texto}}</p>
-        <p class="timestamp">{{criado_em}}</p>
-        <div class="options">
-          <a href="/editarAnotacoes/{{usuario.id}}/{{id}}">Editar</a>
-          <form action="/deletarAnotacoes/{{usuario.id}}/{{id}}" method="post">
-            <button type="submit">Deletar</button>
-          </form>
-        </div>
-      </li>
-      {{/anotacoes}}
-    </ul>
+    <section>
+      <div>
+        <h2>Anotações</h2>
+        <ul>
+          {{#anotacoes}}
+          <li style="background-color: {{cor}}99;">
+            <h2>{{titulo}}</h2>
+            <p>{{texto}}</p>
+            <p class="timestamp">{{criado_em}}</p>
+            <div class="options">
+              <a href="/editar/{{usuario.id}}/{{id}}">Editar</a>
+              <form action="/lixeira/{{usuario.id}}/{{id}}" method="post">
+                <input type="hidden" name="lixeira" value="true">
+                <button type="submit">Lixeira</button>
+              </form>
+            </div>
+          </li>
+          {{/anotacoes}}
+        </ul>
+      </div>
+      <div>
+        <h2>Lixeira</h2>
+        <ul>
+          {{#lixeira}}
+          <li style="background-color: {{cor}}99;">
+            <h2>{{titulo}}</h2>
+            <p>{{texto}}</p>
+            <p class="timestamp">{{criado_em}}</p>
+            <div class="options">
+              <form action="/lixeira/{{usuario.id}}/{{id}}" method="post">
+                <input type="hidden" name="lixeira" value="false" />
+                <button type="submit">Restaurar</button>
+              </form>
+              <form action="/deletar/{{usuario.id}}/{{id}}" method="post">
+                <button type="submit">Deletar</button>
+              </form>
+            </div>
+          </li>
+          {{/lixeira}}
+        </ul>
+      </div>
+    </section>
   </body>
 </html>

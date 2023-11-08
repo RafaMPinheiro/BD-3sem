@@ -9,6 +9,7 @@ public class Anotacoes {
   private String texto;
   private String cor;
   private String criado_em;
+  private boolean lixeira;
   private String nome_usuario;
   private int usuario_id;
 
@@ -54,6 +55,14 @@ public class Anotacoes {
   public void setCriado_em(Timestamp criado_em) {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     this.criado_em = sdf.format(criado_em);
+  }
+
+  public boolean isLixeira() {
+    return lixeira;
+  }
+
+  public void setLixeira(boolean lixeira) {
+    this.lixeira = lixeira;
   }
 
   public String getNome_usuario() {

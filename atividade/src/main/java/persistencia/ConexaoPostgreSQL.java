@@ -16,8 +16,8 @@ public class ConexaoPostgreSQL {
     public ConexaoPostgreSQL() {
         this.host = "localhost";
         this.dbname = "atividade2";
-        this.username = "postgres";
-        this.password = "postgres";
+        this.username = "rafaelpinheiro";
+        this.password = "";
         this.port = "5432";
     }
 
