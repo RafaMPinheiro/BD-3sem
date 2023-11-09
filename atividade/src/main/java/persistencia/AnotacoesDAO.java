@@ -89,8 +89,7 @@ public class AnotacoesDAO {
     String sql = "UPDATE anotacoes SET titulo = ?, texto = ?, cor = ?, lixeira = ? WHERE id = ?;";
     Connection connection = new ConexaoPostgreSQL().getConexao();
 
-    try {
-      PreparedStatement instrucaoSQL = connection.prepareStatement(sql);
+    try (PreparedStatement instrucaoSQL = connection.prepareStatement(sql)) {
       instrucaoSQL.setString(1, anotacao.getTitulo());
       instrucaoSQL.setString(2, anotacao.getTexto());
       instrucaoSQL.setString(3, anotacao.getCor());
@@ -109,12 +108,16 @@ public class AnotacoesDAO {
     String sql = "DELETE FROM anotacoes WHERE id = ?;";
     Connection connection = new ConexaoPostgreSQL().getConexao();
 
-    PreparedStatement instrucaoSQL = connection.prepareStatement(sql);
-    System.out.println(instrucaoSQL);
-    instrucaoSQL.setInt(1, id);
-    int resultado = instrucaoSQL.executeUpdate();
-    instrucaoSQL.close();
-    connection.close();
-    return resultado == 1;
+    try (PreparedStatement instrucaoSQL = connection.prepareStatement(sql)) {
+      System.out.println(instrucaoSQL);
+      instrucaoSQL.setInt(1, id);
+      int resultado = instrucaoSQL.executeUpdate();
+      instrucaoSQL.close();
+      return resultado == 1;
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
+    }
   }
 }

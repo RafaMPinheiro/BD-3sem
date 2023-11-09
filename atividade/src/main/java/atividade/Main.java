@@ -87,12 +87,10 @@ public class Main {
     post("/deletar/:user/:id", (req, res) -> {
       int user_id = Integer.parseInt(req.params(":user"));
       int id = Integer.parseInt(req.params(":id"));
-      System.out.println("aq - " + id);
 
       new AnotacoesDAO().deletar(id);
       res.redirect("/user/" + user_id);
       return null;
     });
-
   }
 }
