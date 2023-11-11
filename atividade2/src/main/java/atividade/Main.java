@@ -1,7 +1,17 @@
 package atividade;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.servlet.http.Part;
 
 import negocio.Anotacoes;
 import persistencia.AnotacoesDAO;
@@ -12,6 +22,10 @@ import static spark.Spark.*;
 
 public class Main {
   public static void main(String[] args) {
+    File uploadDir = new File("upload");
+    uploadDir.mkdir(); // create the upload directory if it doesn't exist
+
+    staticFiles.externalLocation("upload");
 
     get("/", (req, res) -> {
       Map map = new HashMap();
@@ -44,6 +58,18 @@ public class Main {
       anotacoes.setCor(req.queryParams("cor"));
       anotacoes.setNome_usuario(new UsuarioDAO().obter(user_id).getNome());
       anotacoes.setUsuario_id(user_id);
+
+      Part uploadedFile = req.raw().getPart("imagem");
+      if (uploadedFile != null) {
+        // Define a path where you want to store the uploaded files
+        String uploadDirPath = "upload/";
+        Path path = Paths.get(uploadDirPath + uploadedFile.getSubmittedFileName());
+        try (InputStream input = uploadedFile.getInputStream()) {
+          Files.copy(input, path);
+        }
+        anotacoes.setFoto(path.toString()); // Set the file path to your 'anotacoes' object
+      }
+
       new AnotacoesDAO().adicionar(anotacoes);
 
       res.redirect("/user/" + user_id);
