@@ -1,6 +1,7 @@
 package atividade;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -60,15 +61,7 @@ public class Main {
       anotacoes.setUsuario_id(user_id);
 
       Part uploadedFile = req.raw().getPart("imagem");
-      if (uploadedFile != null) {
-        // Define a path where you want to store the uploaded files
-        String uploadDirPath = "upload/";
-        Path path = Paths.get(uploadDirPath + uploadedFile.getSubmittedFileName());
-        try (InputStream input = uploadedFile.getInputStream()) {
-          Files.copy(input, path);
-        }
-        anotacoes.setFoto(path.toString()); // Set the file path to your 'anotacoes' object
-      }
+      
 
       new AnotacoesDAO().adicionar(anotacoes);
 
@@ -84,18 +77,18 @@ public class Main {
     }, new MustacheTemplateEngine());
 
     post("/editar", (req, res) -> {
-              int user_id = Integer.parseInt(req.queryParams("usuario_id"));
-        int id = Integer.parseInt(req.queryParams("id"));
+      int user_id = Integer.parseInt(req.queryParams("usuario_id"));
+      int id = Integer.parseInt(req.queryParams("id"));
 
-        Anotacoes anotacao = new AnotacoesDAO().obter(id);
-        anotacao.setTitulo(req.queryParams("titulo"));
-        anotacao.setTexto(req.queryParams("texto"));
-        anotacao.setCor(req.queryParams("cor"));
-new AnotacoesDAO().editar(anotacao);
+      Anotacoes anotacao = new AnotacoesDAO().obter(id);
+      anotacao.setTitulo(req.queryParams("titulo"));
+      anotacao.setTexto(req.queryParams("texto"));
+      anotacao.setCor(req.queryParams("cor"));
+      new AnotacoesDAO().editar(anotacao);
 
-        res.redirect("/user/" + user_id);
-        return null;
-          });
+      res.redirect("/user/" + user_id);
+      return null;
+    });
 
     post("/lixeira/:user/:id", (req, res) -> {
       int user_id = Integer.parseInt(req.params(":user"));

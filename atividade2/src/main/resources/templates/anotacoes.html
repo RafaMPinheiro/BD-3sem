@@ -78,6 +78,11 @@
         background-color: #f0f0f0;
       }
 
+      img {
+        height: 100px;
+        width: 100px;
+      }
+
       p.timestamp {
         position: absolute;
         top: 10px;
@@ -128,6 +133,7 @@
           <li style="background-color: {{cor}}99;">
             <h2>{{titulo}}</h2>
             <p>{{texto}}</p>
+            <img src="{{imagem}}" alt="Imagem" />
             <p class="timestamp">{{criado_em}}</p>
             <div class="options">
               <a href="/editar/{{usuario.id}}/{{id}}">Editar</a>
