@@ -22,11 +22,6 @@ import static spark.Spark.*;
 
 public class Main {
   public static void main(String[] args) {
-    File uploadDir = new File("upload");
-    uploadDir.mkdir(); // create the upload directory if it doesn't exist
-
-    staticFiles.externalLocation("upload");
-
     get("/", (req, res) -> {
       Map map = new HashMap();
       map.put("usuario", new UsuarioDAO().listar());
@@ -52,25 +47,25 @@ public class Main {
     post("/adicionar", (req, res) -> {
       int user_id = Integer.parseInt(req.queryParams("usuario_id"));
 
-      Anotacoes anotacoes = new Anotacoes();
-      anotacoes.setTitulo(req.queryParams("titulo"));
-      anotacoes.setTexto(req.queryParams("texto"));
-      anotacoes.setCor(req.queryParams("cor"));
-      anotacoes.setNome_usuario(new UsuarioDAO().obter(user_id).getNome());
-      anotacoes.setUsuario_id(user_id);
+      Anotacoes anotacao = new Anotacoes();
+      anotacao.setTitulo(req.queryParams("titulo"));
+      anotacao.setTexto(req.queryParams("texto"));
+      anotacao.setCor(req.queryParams("cor"));
+      anotacao.setNome_usuario(new UsuarioDAO().obter(user_id).getNome());
+      anotacao.setUsuario_id(user_id);
 
-      Part uploadedFile = req.raw().getPart("imagem");
-      if (uploadedFile != null) {
-        // Define a path where you want to store the uploaded files
-        String uploadDirPath = "upload/";
-        Path path = Paths.get(uploadDirPath + uploadedFile.getSubmittedFileName());
-        try (InputStream input = uploadedFile.getInputStream()) {
-          Files.copy(input, path);
-        }
-        anotacoes.setFoto(path.toString()); // Set the file path to your 'anotacoes' object
-      }
+      new AnotacoesDAO().adicionar(anotacao);
 
-      new AnotacoesDAO().adicionar(anotacoes);
+      res.redirect("/user/" + user_id);
+      return null;
+    });
+
+    post("/copiar/:user/:id", (req, res) -> {
+      int user_id = Integer.parseInt(req.params(":user"));
+      int id = Integer.parseInt(req.params(":id"));
+
+      Anotacoes anotacao = new AnotacoesDAO().obter(id);
+      new AnotacoesDAO().adicionar(anotacao);
 
       res.redirect("/user/" + user_id);
       return null;
@@ -84,18 +79,18 @@ public class Main {
     }, new MustacheTemplateEngine());
 
     post("/editar", (req, res) -> {
-              int user_id = Integer.parseInt(req.queryParams("usuario_id"));
-        int id = Integer.parseInt(req.queryParams("id"));
+      int user_id = Integer.parseInt(req.queryParams("usuario_id"));
+      int id = Integer.parseInt(req.queryParams("id"));
 
-        Anotacoes anotacao = new AnotacoesDAO().obter(id);
-        anotacao.setTitulo(req.queryParams("titulo"));
-        anotacao.setTexto(req.queryParams("texto"));
-        anotacao.setCor(req.queryParams("cor"));
-new AnotacoesDAO().editar(anotacao);
+      Anotacoes anotacao = new AnotacoesDAO().obter(id);
+      anotacao.setTitulo(req.queryParams("titulo"));
+      anotacao.setTexto(req.queryParams("texto"));
+      anotacao.setCor(req.queryParams("cor"));
+      new AnotacoesDAO().editar(anotacao);
 
-        res.redirect("/user/" + user_id);
-        return null;
-          });
+      res.redirect("/user/" + user_id);
+      return null;
+    });
 
     post("/lixeira/:user/:id", (req, res) -> {
       int user_id = Integer.parseInt(req.params(":user"));

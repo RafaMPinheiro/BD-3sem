@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Nova Anotação</title>
+    <title>Editar Anotação</title>
     <style>
       * {
         margin: 0;
@@ -78,18 +78,21 @@
   </head>
   <body>
     <div class="navbar">
-      <h1>Nova Anotação</h1>
+      <h1>Editar Anotação</h1>
       <a href="/user/{{usuario}}">Sair</a>
     </div>
-    <form action="/adicionar" method="post">
+    {{#anotacao}}
+    <form action="/editar" method="post">
       <label for="titulo">Título:</label>
-      <input type="text" id="titulo" name="titulo" />
+      <input type="text" id="titulo" name="titulo" value="{{titulo}}" />
 
       <label for="texto">Texto:</label>
-      <textarea id="texto" name="texto"></textarea>
+      <textarea id="texto" name="texto">{{texto}}</textarea>
 
       <label for="cor">Cor:</label>
-      <input type="color" id="cor" name="cor" />
+      <input type="color" id="cor" name="cor" value="{{cor}}" />
+
+      <input type="hidden" id="id" name="id" value="{{id}}" />
 
       <input
         type="hidden"
@@ -100,5 +103,6 @@
 
       <input type="submit" value="Enviar" />
     </form>
+    {{/anotacao}}
   </body>
 </html>
