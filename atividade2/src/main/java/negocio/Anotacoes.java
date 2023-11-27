@@ -8,7 +8,7 @@ public class Anotacoes {
   private String titulo;
   private String texto;
   private String cor;
-  private String criado_em;
+  private String atualizado_em;
   private boolean lixeira;
   private String nome_usuario;
   private int usuario_id;
@@ -48,13 +48,13 @@ public class Anotacoes {
     this.cor = cor;
   }
 
-  public String getCriado_em() {
-    return criado_em;
+  public String getAtualizado_em() {
+    return atualizado_em;
   }
 
-  public void setCriado_em(Timestamp criado_em) {
+  public void setAtualizado_em(Timestamp atualizado_em) {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    this.criado_em = sdf.format(criado_em);
+    this.atualizado_em = sdf.format(atualizado_em);
   }
 
   public boolean isLixeira() {

@@ -133,7 +133,7 @@
           <li style="background-color: {{cor}}99;">
             <h2>{{titulo}}</h2>
             <p>{{texto}}</p>
-            <p class="timestamp">{{criado_em}}</p>
+            <p class="timestamp">{{atualizado_em}}</p>
             <div class="options">
               <form action="/copiar/{{usuario.id}}/{{id}}" method="post">
                 <button type="submit">Copiar</button>
@@ -155,7 +155,7 @@
           <li style="background-color: {{cor}}99;">
             <h2>{{titulo}}</h2>
             <p>{{texto}}</p>
-            <p class="timestamp">{{criado_em}}</p>
+            <p class="timestamp">{{atualizado_em}}</p>
             <div class="options">
               <form action="/lixeira/{{usuario.id}}/{{id}}" method="post">
                 <input type="hidden" name="lixeira" value="false" />
